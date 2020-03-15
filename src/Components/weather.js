@@ -17,7 +17,8 @@ export default class Weather extends Component {
 			humidity: 0,
 			description: "",
 			icon: "",
-			isVisorActive: false
+			isVisorActive: false,
+			erro: ""
 		};
 		this.consulta = this.consulta.bind(this);
 		this.handleKeyPress = this.handleKeyPress.bind(this);
@@ -36,7 +37,8 @@ export default class Weather extends Component {
 
 	consulta() {
 		const city = this.ajustadoEncodeURIComponent(this.state.search);
-		const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=e8aec5dd17aedfa681482bd986fbead9&units=metric&lang=pt_br`;
+		const apikey = "e8aec5dd17aedfa681482bd986fbead9";
+		const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apikey}&units=metric&lang=pt_br`;
 		fetch(url)
 			.then((res) => res.json())
 			.then((json) => {
@@ -52,7 +54,14 @@ export default class Weather extends Component {
 					temp_min,
 					humidity,
 					icon,
-					isVisorActive: true
+					isVisorActive: true,
+					erro: ""
+				});
+			})
+			.catch(() => {
+				this.setState({
+					erro: "Por favor pesquise uma cidade valida",
+					isVisorActive: false
 				});
 			});
 	}
@@ -80,7 +89,7 @@ export default class Weather extends Component {
 						icon={this.state.icon}
 					/>
 				) : (
-					<NoneResult />
+					<NoneResult erro={this.state.erro} />
 				)}
 			</div>
 		);
