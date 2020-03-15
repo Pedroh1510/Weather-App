@@ -8,7 +8,7 @@ export default class Weather extends Component {
 	constructor(props) {
 		super();
 		this.state = {
-			search: "",
+			search: localStorage.getItem("@weatherApp/city"),
 			validKey: false,
 			temp: 0,
 			temp_min: 0,
@@ -57,6 +57,7 @@ export default class Weather extends Component {
 					isVisorActive: true,
 					erro: ""
 				});
+				localStorage.setItem("@weatherApp/city", city);
 			})
 			.catch(() => {
 				this.setState({
@@ -76,6 +77,7 @@ export default class Weather extends Component {
 					onChange={(event) => {
 						this.setState({ search: event.target.value });
 					}}
+					value={this.state.search}
 				/>
 				<input type="button" value="Enter" onClickCapture={this.consulta} />
 				{this.state.isVisorActive ? (

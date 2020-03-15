@@ -8,7 +8,7 @@ export default class Result extends Component {
 		return (
 			<div>
 				<h2>Cidade: {this.props.city}</h2>
-				<h2>Clima: {this.props.desciption}</h2>
+				<h2>Clima: {this.props.description}</h2>
 				<h2>Temperatura Atual: {this.props.temp}</h2>
 				<h2>Temperatura max: {this.props.temp_max}</h2>
 				<h2>Temperatura min: {this.props.temp_min}</h2>
