@@ -1,0 +1,13 @@
+.none {
+	color: transparent;
+}
+.stations {
+	max-width: max-content;
+	max-height: max-content;
+	margin-top: 20px;
+	background-color: lightslategray;
+	box-shadow: 0 3px 8px 0 lightgrey;
+}
+img {
+	resize: both;
+}

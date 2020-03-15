@@ -1,5 +1,9 @@
 import React, { Component } from "react";
 
+import "./weather.css";
+import FullResult from "./Result";
+import NoneResult from "./NoneResult";
+
 export default class Weather extends Component {
 	constructor(props) {
 		super();
@@ -7,9 +11,13 @@ export default class Weather extends Component {
 			search: "",
 			validKey: false,
 			temp: 0,
+			temp_min: 0,
+			temp_max: 0,
 			city: "",
 			humidity: 0,
-			description: ""
+			description: "",
+			icon: "",
+			isVisorActive: false
 		};
 		this.consulta = this.consulta.bind(this);
 		this.handleKeyPress = this.handleKeyPress.bind(this);
@@ -19,16 +27,33 @@ export default class Weather extends Component {
 			this.consulta();
 		}
 	};
+
+	ajustadoEncodeURIComponent(str) {
+		return encodeURIComponent(str).replace(/[!'()*]/g, function(c) {
+			return "%" + c.charCodeAt(0).toString(16);
+		});
+	}
+
 	consulta() {
-		const city = `${this.state.search}`;
-		const url = `https://api.hgbrasil.com/weather?format=json-cors&key=e6b494d3&city_name=${city}`;
+		const city = this.ajustadoEncodeURIComponent(this.state.search);
+		const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=e8aec5dd17aedfa681482bd986fbead9&units=metric&lang=pt_br`;
 		fetch(url)
-			.then((v) => v.json())
+			.then((res) => res.json())
 			.then((json) => {
-				const validKey = json.valid_key;
-				const content = json.results;
-				const { humidity, temp, city, description } = content;
-				this.setState({ temp, city, humidity, description });
+				const { description } = json.weather[0];
+				const icon = `http://openweathermap.org/img/w/${json.weather[0].icon}.png`;
+				const city = json.name;
+				const { temp, temp_min, temp_max, humidity } = json.main;
+				this.setState({
+					city,
+					description,
+					temp,
+					temp_max,
+					temp_min,
+					humidity,
+					icon,
+					isVisorActive: true
+				});
 			});
 	}
 	render() {
@@ -44,10 +69,19 @@ export default class Weather extends Component {
 					}}
 				/>
 				<input type="button" value="Enter" onClickCapture={this.consulta} />
-				<h2>Cidade encontrada: {this.state.city}</h2>
-				<h2>Confição clima {this.state.description}</h2>
-				<h2>Temperatura: {this.state.temp}</h2>
-				<h2>Humidade: {this.state.humidity}</h2>
+				{this.state.isVisorActive ? (
+					<FullResult
+						city={this.state.city}
+						description={this.state.description}
+						temp={this.state.temp}
+						temp_max={this.state.temp_max}
+						temp_min={this.state.temp_min}
+						humidity={this.state.humidity}
+						icon={this.state.icon}
+					/>
+				) : (
+					<NoneResult />
+				)}
 			</div>
 		);
 	}
