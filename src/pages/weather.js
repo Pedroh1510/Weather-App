@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 
-import "./weather.css";
-import FullResult from "./Result";
-import NoneResult from "./NoneResult";
+import { Container } from "./style";
+import FullResult from "../components/Result";
+import NoneResult from "../components/NoneResult";
 
 export default class Weather extends Component {
-	constructor(props) {
+	constructor() {
 		super();
 		this.state = {
 			search: localStorage.getItem("@weatherApp/city"),
@@ -68,7 +68,7 @@ export default class Weather extends Component {
 	}
 	render() {
 		return (
-			<div>
+			<Container>
 				<h2>Previsão do tempo</h2>
 				<p>Exemplo: São Paulo</p>
 				<input
@@ -93,7 +93,7 @@ export default class Weather extends Component {
 				) : (
 					<NoneResult erro={this.state.erro} />
 				)}
-			</div>
+			</Container>
 		);
 	}
 }
